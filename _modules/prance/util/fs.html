@@ -1,0 +1,295 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>prance.util.fs &#8212; prance 0.8.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.8.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  <li><a href="../../prance.html">prance</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for prance.util.fs</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;This submodule contains file system utilities for Prance.&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Jens Finkhaeuser&#39;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s1">&#39;Copyright (c) 2016-2017 Jens Finkhaeuser&#39;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s1">&#39;MIT +no-false-attribs&#39;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">()</span>
+
+
+<span class="c1"># Re-define an error for Python 2.7</span>
+<span class="kn">import</span> <span class="nn">six</span>
+<span class="k">if</span> <span class="n">six</span><span class="o">.</span><span class="n">PY2</span><span class="p">:</span>
+  <span class="ne">FileNotFoundError</span> <span class="o">=</span> <span class="ne">OSError</span>  <span class="c1"># pragma: no cover</span>
+<span class="k">else</span><span class="p">:</span>
+  <span class="ne">FileNotFoundError</span> <span class="o">=</span> <span class="ne">FileNotFoundError</span>  <span class="c1"># pragma: no cover</span>
+
+
+<div class="viewcode-block" id="from_posix"><a class="viewcode-back" href="../../../api/prance.util.fs.html#prance.util.fs.from_posix">[docs]</a><span class="k">def</span> <span class="nf">from_posix</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Convert a path from posix-like, to the platform format.</span>
+
+<span class="sd">  :param str fname: The filename in posix-like format.</span>
+<span class="sd">  :return: The filename in the format of the platform.</span>
+<span class="sd">  :rtype: str</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="kn">import</span> <span class="nn">sys</span>
+  <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;win32&#39;</span><span class="p">:</span>  <span class="c1"># pragma: nocover</span>
+    <span class="k">if</span> <span class="n">fname</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
+      <span class="n">fname</span> <span class="o">=</span> <span class="n">fname</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="n">fname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">fname</span></div>
+
+
+<div class="viewcode-block" id="to_posix"><a class="viewcode-back" href="../../../api/prance.util.fs.html#prance.util.fs.to_posix">[docs]</a><span class="k">def</span> <span class="nf">to_posix</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Convert a path to posix-like format.</span>
+
+<span class="sd">  :param str fname: The filename to convert to posix format.</span>
+<span class="sd">  :return: The filename in posix-like format.</span>
+<span class="sd">  :rtype: str</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="kn">import</span> <span class="nn">sys</span>
+  <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;win32&#39;</span><span class="p">:</span>  <span class="c1"># pragma: nocover</span>
+    <span class="kn">import</span> <span class="nn">os.path</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+      <span class="n">fname</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">fname</span>
+    <span class="n">fname</span> <span class="o">=</span> <span class="n">fname</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\\</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">fname</span></div>
+
+
+<div class="viewcode-block" id="abspath"><a class="viewcode-back" href="../../../api/prance.util.fs.html#prance.util.fs.abspath">[docs]</a><span class="k">def</span> <span class="nf">abspath</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">relative_to</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Return the absolute path of a file relative to a reference file.</span>
+
+<span class="sd">  If no reference file is given, this function works identical to</span>
+<span class="sd">  `canonical_filename`.</span>
+
+<span class="sd">  :param str filename: The filename to make absolute.</span>
+<span class="sd">  :param str relative_to: [optional] the reference file name.</span>
+<span class="sd">  :return: The absolute path</span>
+<span class="sd">  :rtype: str</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="c1"># Create filename relative to the reference, if it exists.</span>
+  <span class="kn">import</span> <span class="nn">os.path</span>
+  <span class="n">fname</span> <span class="o">=</span> <span class="n">from_posix</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">relative_to</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+    <span class="n">relative_to</span> <span class="o">=</span> <span class="n">from_posix</span><span class="p">(</span><span class="n">relative_to</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">relative_to</span><span class="p">):</span>
+      <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">relative_to</span><span class="p">,</span> <span class="n">fname</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">fname</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">relative_to</span><span class="p">),</span> <span class="n">fname</span><span class="p">)</span>
+
+  <span class="c1"># Make the result canonical</span>
+  <span class="n">fname</span> <span class="o">=</span> <span class="n">canonical_filename</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">to_posix</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="canonical_filename"><a class="viewcode-back" href="../../../api/prance.util.fs.html#prance.util.fs.canonical_filename">[docs]</a><span class="k">def</span> <span class="nf">canonical_filename</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Return the canonical version of a file name.</span>
+
+<span class="sd">  The canonical version is defined as the absolute path, and all file system</span>
+<span class="sd">  links dereferenced.</span>
+
+<span class="sd">  :param str filename: The filename to make canonical.</span>
+<span class="sd">  :return: The canonical filename.</span>
+<span class="sd">  :rtype: str</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">os.path</span>
+
+  <span class="n">path</span> <span class="o">=</span> <span class="n">from_posix</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+  <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">p</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+      <span class="c1"># os.readlink doesn&#39;t exist in windows python2.7</span>
+      <span class="k">try</span><span class="p">:</span>
+        <span class="n">deref_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">readlink</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+      <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>  <span class="c1"># pragma: no cover</span>
+        <span class="k">return</span> <span class="n">path</span>
+      <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">deref_path</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">path</span></div>
+
+
+<div class="viewcode-block" id="detect_encoding"><a class="viewcode-back" href="../../../api/prance.util.fs.html#prance.util.fs.detect_encoding">[docs]</a><span class="k">def</span> <span class="nf">detect_encoding</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">default_to_utf8</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Detect the named file&#39;s character encoding.</span>
+
+<span class="sd">  If the first parts of the file appear to be ASCII, this function returns</span>
+<span class="sd">  &#39;UTF-8&#39;, as that&#39;s a safe superset of ASCII. This can be switched off by</span>
+<span class="sd">  changing the `default_to_utf8` parameter.</span>
+
+<span class="sd">  :param str filename: The name of the file to detect the encoding of.</span>
+<span class="sd">  :param bool default_to_utf8: Defaults to True. Set to False to disable</span>
+<span class="sd">      treating ASCII files as UTF-8.</span>
+<span class="sd">  :param bool read_all: Keyword argument; if True, reads the entire file</span>
+<span class="sd">      for encoding detection.</span>
+<span class="sd">  :return: The file encoding.</span>
+<span class="sd">  :rtype: str</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="c1"># Read no more than 32 bytes or the file&#39;s size</span>
+  <span class="kn">import</span> <span class="nn">os.path</span>
+  <span class="n">filename</span> <span class="o">=</span> <span class="n">from_posix</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+  <span class="n">file_len</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+  <span class="n">read_len</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="n">file_len</span><span class="p">)</span>
+
+  <span class="c1"># ... unless we&#39;re supposed to!</span>
+  <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;read_all&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">):</span>
+    <span class="n">read_len</span> <span class="o">=</span> <span class="n">file_len</span>
+
+  <span class="c1"># Read the first read_len bytes raw, so we can detect the encoding</span>
+  <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">raw_handle</span><span class="p">:</span>
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">raw_handle</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">read_len</span><span class="p">)</span>
+
+  <span class="c1"># Detect the encoding the file specfies, if any.</span>
+  <span class="kn">import</span> <span class="nn">codecs</span>
+  <span class="k">if</span> <span class="n">raw</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">codecs</span><span class="o">.</span><span class="n">BOM_UTF8</span><span class="p">):</span>
+    <span class="n">encoding</span> <span class="o">=</span> <span class="s1">&#39;utf-8-sig&#39;</span>
+  <span class="k">else</span><span class="p">:</span>
+    <span class="c1"># Detect encoding using the best detector available</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="c1"># First try ICU. ICU will report ASCII in the first 32 Bytes as</span>
+      <span class="c1"># ISO-8859-1, which isn&#39;t exactly wrong, but maybe optimistic.</span>
+      <span class="kn">import</span> <span class="nn">icu</span>
+      <span class="n">encoding</span> <span class="o">=</span> <span class="n">icu</span><span class="o">.</span><span class="n">CharsetDetector</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span><span class="o">.</span><span class="n">detect</span><span class="p">()</span><span class="o">.</span><span class="n">getName</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+      <span class="c1"># If that doesn&#39;t work, try chardet - it&#39;s not got native components,</span>
+      <span class="c1"># which is a bonus in some environments, but it&#39;s not as precise.</span>
+      <span class="kn">import</span> <span class="nn">chardet</span>
+      <span class="n">encoding</span> <span class="o">=</span> <span class="n">chardet</span><span class="o">.</span><span class="n">detect</span><span class="p">(</span><span class="n">raw</span><span class="p">)[</span><span class="s1">&#39;encoding&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+      <span class="c1"># Chardet is more brutal in that it reports ASCII if none of the first</span>
+      <span class="c1"># Bytes contain high bits. To emulate ICU, we just bump up the detected</span>
+      <span class="c1"># encoding.</span>
+      <span class="k">if</span> <span class="n">encoding</span> <span class="o">==</span> <span class="s1">&#39;ascii&#39;</span><span class="p">:</span>
+        <span class="n">encoding</span> <span class="o">=</span> <span class="s1">&#39;iso-8859-1&#39;</span>
+
+    <span class="c1"># Return UTF-8 if that is what we&#39;re supposed to default to</span>
+    <span class="k">if</span> <span class="n">default_to_utf8</span> <span class="ow">and</span> <span class="n">encoding</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">,</span> <span class="s1">&#39;iso-8859-1&#39;</span><span class="p">):</span>
+      <span class="n">encoding</span> <span class="o">=</span> <span class="s1">&#39;utf-8&#39;</span>
+
+  <span class="k">return</span> <span class="n">encoding</span></div>
+
+
+<div class="viewcode-block" id="read_file"><a class="viewcode-back" href="../../../api/prance.util.fs.html#prance.util.fs.read_file">[docs]</a><span class="k">def</span> <span class="nf">read_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">encoding</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Read and decode a file, taking BOMs into account.</span>
+
+<span class="sd">  :param str filename: The name of the file to read.</span>
+<span class="sd">  :param str encoding: The encoding to use. If not given, detect_encoding is</span>
+<span class="sd">      used to determine the encoding.</span>
+<span class="sd">  :return: The file contents.</span>
+<span class="sd">  :rtype: unicode string</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="n">filename</span> <span class="o">=</span> <span class="n">from_posix</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">encoding</span><span class="p">:</span>
+    <span class="c1"># Detect encoding</span>
+    <span class="n">encoding</span> <span class="o">=</span> <span class="n">detect_encoding</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+  <span class="c1"># Finally, read the file in the detected encoding</span>
+  <span class="kn">import</span> <span class="nn">io</span>
+  <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="n">encoding</span> <span class="o">=</span> <span class="n">encoding</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">handle</span><span class="o">.</span><span class="n">read</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="write_file"><a class="viewcode-back" href="../../../api/prance.util.fs.html#prance.util.fs.write_file">[docs]</a><span class="k">def</span> <span class="nf">write_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">encoding</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Write a file with the given encoding.</span>
+
+<span class="sd">  The default encoding is &#39;utf-8&#39;. It&#39;s recommended not to change that for</span>
+<span class="sd">  JSON or YAML output.</span>
+
+<span class="sd">  :param str filename: The name of the file to read.</span>
+<span class="sd">  :param str contents: The file contents to write.</span>
+<span class="sd">  :param str encoding: The encoding to use. If not given, detect_encoding is</span>
+<span class="sd">      used to determine the encoding.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">encoding</span><span class="p">:</span>
+    <span class="n">encoding</span> <span class="o">=</span> <span class="s1">&#39;utf-8&#39;</span>
+
+  <span class="kn">import</span> <span class="nn">io</span>
+  <span class="n">fname</span> <span class="o">=</span> <span class="n">from_posix</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+  <span class="k">with</span> <span class="n">io</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="n">encoding</span> <span class="o">=</span> <span class="n">encoding</span><span class="p">)</span> <span class="k">as</span> <span class="n">handle</span><span class="p">:</span>
+    <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">contents</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2016-2017, Jens Finkhaeuser.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+    <a href="https://github.com/jfinkhaeuser/prance" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,266 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>prance &#8212; prance 0.8.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="prance.mixins" href="prance.mixins.html" />
+    <link rel="prev" title="Documentation of prance 0.8.0" href="../index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">prance</a><ul>
+<li><a class="reference internal" href="#exceptions">Exceptions</a></li>
+<li><a class="reference internal" href="#classes">Classes</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../index.html" title="previous chapter">Documentation of prance 0.8.0</a></li>
+      <li>Next: <a href="prance.mixins.html" title="next chapter">prance.mixins</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="prance">
+<h1>prance<a class="headerlink" href="#prance" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<span class="target" id="module-prance"></span><p>Prance implements parsers for Swagger/OpenAPI 2.0 API specs.</p>
+<p>See <a class="reference external" href="https://openapis.org/">https://openapis.org/</a> for details on the specification.</p>
+<p>Included is a BaseParser that reads and validates swagger specs, and a
+ResolvingParser that additionally resolves any $ref references.</p>
+<div class="section" id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="prance.SwaggerValidationError">
+<em class="property">exception </em><code class="descclassname">prance.</code><code class="descname">SwaggerValidationError</code><a class="reference internal" href="../_modules/prance.html#SwaggerValidationError"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#prance.SwaggerValidationError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">Exception</span></code></p>
+<dl class="method">
+<dt id="prance.SwaggerValidationError.with_traceback">
+<code class="descname">with_traceback</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#prance.SwaggerValidationError.with_traceback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception.with_traceback(tb) –
+set self.__traceback__ to tb and return self.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="prance.BaseParser">
+<em class="property">class </em><code class="descclassname">prance.</code><code class="descname">BaseParser</code><span class="sig-paren">(</span><em>url=None</em>, <em>spec_string=None</em>, <em>lazy=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/prance.html#BaseParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#prance.BaseParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="prance.mixins.html#prance.mixins.YAMLMixin" title="prance.mixins.YAMLMixin"><code class="xref py py-class docutils literal"><span class="pre">prance.mixins.YAMLMixin</span></code></a>, <a class="reference internal" href="prance.mixins.html#prance.mixins.JSONMixin" title="prance.mixins.JSONMixin"><code class="xref py py-class docutils literal"><span class="pre">prance.mixins.JSONMixin</span></code></a>, <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>The BaseParser loads, parses and validates Swagger/OpenAPI 2.0 specs.</p>
+<p>Uses <code class="xref py py-class docutils literal"><span class="pre">YAMLMixin</span></code> and <code class="xref py py-class docutils literal"><span class="pre">JSONMixin</span></code> for additional
+functionality.</p>
+<dl class="method">
+<dt id="prance.BaseParser.json">
+<code class="descname">json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#prance.BaseParser.json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a JSON representation of the specifications.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">JSON representation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="prance.BaseParser.parse">
+<code class="descname">parse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/prance.html#BaseParser.parse"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#prance.BaseParser.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>When the BaseParser was lazily created, load and parse now.</p>
+<p>You can use this function to re-use an existing parser for parsing
+multiple files by setting its url property and then invoking this
+function.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="prance.BaseParser.specs_updated">
+<code class="descname">specs_updated</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#prance.BaseParser.specs_updated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if self.specficiation changed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether the specs changed.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="prance.BaseParser.yaml">
+<code class="descname">yaml</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#prance.BaseParser.yaml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a YAML representation of the specifications.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">YAML representation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="prance.BaseParser.BACKENDS">
+<code class="descname">BACKENDS</code><em class="property"> = {'flex': '_validate_flex', 'swagger-spec-validator': '_validate_swagger_spec_validator'}</em><a class="headerlink" href="#prance.BaseParser.BACKENDS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="prance.ResolvingParser">
+<em class="property">class </em><code class="descclassname">prance.</code><code class="descname">ResolvingParser</code><span class="sig-paren">(</span><em>url=None</em>, <em>spec_string=None</em>, <em>lazy=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/prance.html#ResolvingParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#prance.ResolvingParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#prance.BaseParser" title="prance.BaseParser"><code class="xref py py-class docutils literal"><span class="pre">prance.BaseParser</span></code></a></p>
+<p>The ResolvingParser extends BaseParser with resolving references.</p>
+<dl class="method">
+<dt id="prance.ResolvingParser.json">
+<code class="descname">json</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#prance.ResolvingParser.json" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a JSON representation of the specifications.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">JSON representation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="prance.ResolvingParser.parse">
+<code class="descname">parse</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#prance.ResolvingParser.parse" title="Permalink to this definition">¶</a></dt>
+<dd><p>When the BaseParser was lazily created, load and parse now.</p>
+<p>You can use this function to re-use an existing parser for parsing
+multiple files by setting its url property and then invoking this
+function.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="prance.ResolvingParser.specs_updated">
+<code class="descname">specs_updated</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#prance.ResolvingParser.specs_updated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Test if self.specficiation changed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Whether the specs changed.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="prance.ResolvingParser.yaml">
+<code class="descname">yaml</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#prance.ResolvingParser.yaml" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a YAML representation of the specifications.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">YAML representation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="prance.ResolvingParser.BACKENDS">
+<code class="descname">BACKENDS</code><em class="property"> = {'flex': '_validate_flex', 'swagger-spec-validator': '_validate_swagger_spec_validator'}</em><a class="headerlink" href="#prance.ResolvingParser.BACKENDS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2016-2017, Jens Finkhaeuser.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+    <a href="https://github.com/jfinkhaeuser/prance" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

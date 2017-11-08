@@ -1,0 +1,267 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>prance &#8212; prance 0.8.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for prance</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Prance implements parsers for Swagger/OpenAPI 2.0 API specs.</span>
+
+<span class="sd">See https://openapis.org/ for details on the specification.</span>
+
+<span class="sd">Included is a BaseParser that reads and validates swagger specs, and a</span>
+<span class="sd">ResolvingParser that additionally resolves any $ref references.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Jens Finkhaeuser&#39;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s1">&#39;Copyright (c) 2016-2017 Jens Finkhaeuser&#39;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s1">&#39;MIT +no-false-attribs&#39;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;util&#39;</span><span class="p">,</span> <span class="s1">&#39;mixins&#39;</span><span class="p">,</span> <span class="s1">&#39;cli&#39;</span><span class="p">)</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.8.0&#39;</span>
+
+
+<span class="c1"># Define our own error class</span>
+<div class="viewcode-block" id="SwaggerValidationError"><a class="viewcode-back" href="../api/prance.html#prance.SwaggerValidationError">[docs]</a><span class="k">class</span> <span class="nc">SwaggerValidationError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+  <span class="k">pass</span></div>
+
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">mixins</span>
+
+<span class="c1"># Placeholder for when no URL is specified for the main spec file</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">platform</span> <span class="o">==</span> <span class="s1">&#39;win32&#39;</span><span class="p">:</span>  <span class="c1"># pragma: nocover</span>
+  <span class="c1"># Placeholder must be absolute</span>
+  <span class="n">_PLACEHOLDER_URL</span> <span class="o">=</span> <span class="s1">&#39;file:///c:/__placeholder_url__.yaml&#39;</span>
+<span class="k">else</span><span class="p">:</span>
+  <span class="n">_PLACEHOLDER_URL</span> <span class="o">=</span> <span class="s1">&#39;file:///__placeholder_url__.yaml&#39;</span>
+
+
+<div class="viewcode-block" id="BaseParser"><a class="viewcode-back" href="../api/prance.html#prance.BaseParser">[docs]</a><span class="k">class</span> <span class="nc">BaseParser</span><span class="p">(</span><span class="n">mixins</span><span class="o">.</span><span class="n">YAMLMixin</span><span class="p">,</span> <span class="n">mixins</span><span class="o">.</span><span class="n">JSONMixin</span><span class="p">,</span> <span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  The BaseParser loads, parses and validates Swagger/OpenAPI 2.0 specs.</span>
+
+<span class="sd">  Uses :py:class:`YAMLMixin` and :py:class:`JSONMixin` for additional</span>
+<span class="sd">  functionality.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="n">BACKENDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;flex&#39;</span><span class="p">:</span> <span class="s1">&#39;_validate_flex&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;swagger-spec-validator&#39;</span><span class="p">:</span> <span class="s1">&#39;_validate_swagger_spec_validator&#39;</span><span class="p">,</span>
+  <span class="p">}</span>
+
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">spec_string</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">lazy</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Load, parse and validate specs.</span>
+
+<span class="sd">    You can either provide a URL or a spec string, but not both.</span>
+
+<span class="sd">    :param str url: The URL of the file to load. URLs missing a scheme are</span>
+<span class="sd">      assumed to be file URLs.</span>
+<span class="sd">    :param str spec_string: The specifications to parse.</span>
+<span class="sd">    :param bool lazy: If true, do not load or parse anything. Instead wait for</span>
+<span class="sd">      the parse function to be invoked.</span>
+<span class="sd">    :param str backend: [optional] one of &#39;flex&#39;, &#39;swagger-spec-validator&#39;.</span>
+<span class="sd">      Determines the validation backend to use. Defaults to &#39;flex&#39;.</span>
+<span class="sd">    :param bool strict: [optional] Applies only to the &#39;swagger-spec-validator&#39;</span>
+<span class="sd">      backend. If False, accepts non-String keys by stringifying them before</span>
+<span class="sd">      validation. Defaults to True.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="n">url</span> <span class="ow">or</span> <span class="n">spec_string</span> <span class="ow">and</span> <span class="ow">not</span> <span class="p">(</span><span class="n">url</span> <span class="ow">and</span> <span class="n">spec_string</span><span class="p">),</span> \
+        <span class="s1">&#39;You must provide either a URL to read, or a spec string to &#39;</span>\
+        <span class="s1">&#39;parse, but not both!&#39;</span>
+
+    <span class="c1"># Keep the parameters around for later use</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">url</span><span class="p">:</span>
+      <span class="kn">from</span> <span class="nn">.util.url</span> <span class="k">import</span> <span class="n">absurl</span>
+      <span class="kn">from</span> <span class="nn">.util.fs</span> <span class="k">import</span> <span class="n">abspath</span>
+      <span class="kn">import</span> <span class="nn">os</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">absurl</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">abspath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()))</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">_PLACEHOLDER_URL</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_spec_string</span> <span class="o">=</span> <span class="n">spec_string</span>
+
+    <span class="c1"># Initialize variables we&#39;re filling later</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">specification</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Add kw args as options</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_options</span> <span class="o">=</span> <span class="n">kwargs</span>
+
+    <span class="c1"># Verify backend</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;backend&#39;</span><span class="p">,</span> <span class="s1">&#39;flex&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_backend</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">BaseParser</span><span class="o">.</span><span class="n">BACKENDS</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+      <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Backend may only be one of </span><span class="si">%s</span><span class="s1">!&#39;</span>
+              <span class="o">%</span> <span class="p">(</span><span class="n">BaseParser</span><span class="o">.</span><span class="n">BACKENDS</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="p">))</span>
+
+    <span class="c1"># Start parsing if lazy mode is not requested.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">lazy</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">parse</span><span class="p">()</span>
+
+<div class="viewcode-block" id="BaseParser.parse"><a class="viewcode-back" href="../api/prance.html#prance.BaseParser.parse">[docs]</a>  <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>  <span class="c1"># noqa: F811</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    When the BaseParser was lazily created, load and parse now.</span>
+
+<span class="sd">    You can use this function to re-use an existing parser for parsing</span>
+<span class="sd">    multiple files by setting its url property and then invoking this</span>
+<span class="sd">    function.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># If we have a file name, we need to read that in.</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">!=</span> <span class="n">_PLACEHOLDER_URL</span><span class="p">:</span>
+      <span class="kn">from</span> <span class="nn">.util.url</span> <span class="k">import</span> <span class="n">fetch_url</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">specification</span> <span class="o">=</span> <span class="n">fetch_url</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+
+    <span class="c1"># If we have a spec string, try to parse it.</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_spec_string</span><span class="p">:</span>
+      <span class="kn">from</span> <span class="nn">.util.formats</span> <span class="k">import</span> <span class="n">parse_spec</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">specification</span> <span class="o">=</span> <span class="n">parse_spec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_spec_string</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+
+    <span class="c1"># Perform some sanitization in lenient mode.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;strict&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+      <span class="kn">from</span> <span class="nn">.util</span> <span class="k">import</span> <span class="n">stringify_keys</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">specification</span> <span class="o">=</span> <span class="n">stringify_keys</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">specification</span><span class="p">)</span>
+
+    <span class="c1"># If we have a parsed spec, convert it to JSON. Then we can validate</span>
+    <span class="c1"># the JSON. At this point, we *require* a parsed specification to exist,</span>
+    <span class="c1"># so we might as well assert.</span>
+    <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">specification</span><span class="p">,</span> <span class="s1">&#39;No specification parsed, cannot validate!&#39;</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">()</span></div>
+
+  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># Validate the parsed specs, using the given validation backend.</span>
+    <span class="n">validator</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">BaseParser</span><span class="o">.</span><span class="n">BACKENDS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_backend</span><span class="p">])</span>
+    <span class="n">validator</span><span class="p">()</span>
+
+  <span class="k">def</span> <span class="nf">_validate_flex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">flex.exceptions</span> <span class="k">import</span> <span class="n">ValidationError</span>
+    <span class="kn">from</span> <span class="nn">flex.core</span> <span class="k">import</span> <span class="n">parse</span> <span class="k">as</span> <span class="n">validate</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">validate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">specification</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="n">SwaggerValidationError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">))</span>
+
+  <span class="k">def</span> <span class="nf">_validate_swagger_spec_validator</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">swagger_spec_validator.common</span> <span class="k">import</span> <span class="n">SwaggerValidationError</span> <span class="k">as</span> <span class="n">SSVErr</span>
+    <span class="kn">from</span> <span class="nn">swagger_spec_validator.validator20</span> <span class="k">import</span> <span class="n">validate_spec</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">validate_spec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">specification</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">SSVErr</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="n">SwaggerValidationError</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">ex</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="ResolvingParser"><a class="viewcode-back" href="../api/prance.html#prance.ResolvingParser">[docs]</a><span class="k">class</span> <span class="nc">ResolvingParser</span><span class="p">(</span><span class="n">BaseParser</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;The ResolvingParser extends BaseParser with resolving references.&quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">spec_string</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">lazy</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    See :py:class:`BaseParser`.</span>
+
+<span class="sd">    Resolves JSON pointers/references (i.e. &#39;$ref&#39; keys) before validating the</span>
+<span class="sd">    specs. The implication is that self.specfication is fully resolved, and</span>
+<span class="sd">    does not contain any references.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">BaseParser</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="p">,</span>
+        <span class="n">spec_string</span> <span class="o">=</span> <span class="n">spec_string</span><span class="p">,</span>
+        <span class="n">lazy</span> <span class="o">=</span> <span class="n">lazy</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
+
+  <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="c1"># We have a problem with the BaseParser&#39;s validate function: the</span>
+    <span class="c1"># jsonschema implementation underlying it does not accept relative</span>
+    <span class="c1"># path references, but the Swagger specs allow them:</span>
+    <span class="c1"># http://swagger.io/specification/#referenceObject</span>
+    <span class="c1"># We therefore use our own resolver first, and validate later.</span>
+    <span class="kn">from</span> <span class="nn">.util.resolver</span> <span class="k">import</span> <span class="n">RefResolver</span>
+    <span class="n">resolver</span> <span class="o">=</span> <span class="n">RefResolver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">specification</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">resolver</span><span class="o">.</span><span class="n">resolve_references</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">specification</span> <span class="o">=</span> <span class="n">resolver</span><span class="o">.</span><span class="n">specs</span>
+
+    <span class="c1"># Now validate - the BaseParser knows the specifics</span>
+    <span class="n">BaseParser</span><span class="o">.</span><span class="n">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2016-2017, Jens Finkhaeuser.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+    <a href="https://github.com/jfinkhaeuser/prance" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

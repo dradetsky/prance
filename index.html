@@ -1,0 +1,223 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Documentation of prance 0.8.0 &#8212; prance 0.8.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.8.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="prance" href="api/prance.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Documentation of prance 0.8.0</a></li>
+<li><a class="reference internal" href="#usage">Usage</a><ul>
+<li><a class="reference internal" href="#command-line-interface">Command Line Interface</a></li>
+<li><a class="reference internal" href="#code">Code</a></li>
+<li><a class="reference internal" href="#compatibility">Compatibility</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#contributing">Contributing</a></li>
+<li><a class="reference internal" href="#license">License</a></li>
+<li><a class="reference internal" href="#api-modules">API/Modules</a></li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="#">Documentation overview</a><ul>
+      <li>Next: <a href="api/prance.html" title="next chapter">prance</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="documentation-of-prance-release">
+<h1>Documentation of prance 0.8.0<a class="headerlink" href="#documentation-of-prance-release" title="Permalink to this headline">¶</a></h1>
+<p>Swagger/OpenAPI 2.0 Parser for Python</p>
+<p><a class="reference external" href="https://travis-ci.org/jfinkhaeuser/prance"><img alt="Posix Build Status" src="https://travis-ci.org/jfinkhaeuser/prance.svg?branch=master" /></a> <a class="reference external" href="https://ci.appveyor.com/project/jfinkhaeuser/prance"><img alt="Windows Build Status" src="https://ci.appveyor.com/api/projects/status/ic7lo8r95mkee7di/branch/master?svg=true" /></a> <a class="reference external" href="http://prance.readthedocs.io/en/latest/"><img alt="Docs" src="https://readthedocs.org/projects/prance/badge/?version=latest" /></a> <a class="reference external" href="https://pypi.python.org/pypi/prance/"><img alt="License" src="https://img.shields.io/pypi/l/prance.svg" /></a>
+<a class="reference external" href="https://pypi.python.org/pypi/prance/"><img alt="PyPI" src="https://img.shields.io/pypi/v/prance.svg" /></a> <a class="reference external" href="https://pypi.python.org/pypi/prance/"><img alt="Python Versions" src="https://img.shields.io/pypi/pyversions/prance.svg" /></a> <a class="reference external" href="https://pypi.python.org/pypi/prance/"><img alt="Package Format" src="https://img.shields.io/pypi/format/prance.svg" /></a> <a class="reference external" href="https://pypi.python.org/pypi/prance/"><img alt="Package Status" src="https://img.shields.io/pypi/status/prance.svg" /></a></p>
+<p>Prance provides parsers for <a class="reference external" href="http://swagger.io/specification/">Swagger/OpenAPI
+2.0</a> API specifications in Python.
+It uses
+<a class="reference external" href="https://github.com/Yelp/swagger_spec_validator">swagger_spec_validator</a>
+to validate specifications, but additionally resolves <a class="reference external" href="https://tools.ietf.org/html/draft-pbryan-zyp-json-ref-03">JSON
+references</a>
+in accordance with the Swagger spec.</p>
+<p>Mostly the latter involves handling non-URI references; Swagger is fine
+with providing relative file paths, whereas JSON references require URIs
+at this point in time.</p>
+</div>
+<div class="section" id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="command-line-interface">
+<h2>Command Line Interface<a class="headerlink" href="#command-line-interface" title="Permalink to this headline">¶</a></h2>
+<p>After installing prance, a CLI is available for validating (and resolving
+external references in) specs:</p>
+<div class="code bash highlight-default"><div class="highlight"><pre><span></span># Validates with resolving
+$ prance validate path/to/swagger.yml
+
+# Validates without resolving
+$ prance validate --no-resolve path/to/swagger.yml
+
+# Validates and resolves, and writes the results to output.yaml
+$ prance validate -o output.yaml path/to/swagger.yml
+
+# Fetch URL, validate and resolve.
+$ prance validate http://petstore.swagger.io/v2/swagger.json
+Processing &quot;http://petstore.swagger.io/v2/swagger.json&quot;...
+ -&gt; Resolving external references.
+Validates OK as Swagger/OpenAPI 2.0!
+</pre></div>
+</div>
+</div>
+<div class="section" id="code">
+<h2>Code<a class="headerlink" href="#code" title="Permalink to this headline">¶</a></h2>
+<p>Most likely you have spec file and want to parse it:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">prance</span> <span class="k">import</span> <span class="n">ResolvingParser</span>
+<span class="n">parser</span> <span class="o">=</span> <span class="n">ResolvingParser</span><span class="p">(</span><span class="s1">&#39;path/to/my/swagger.yaml&#39;</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">specification</span>  <span class="c1"># contains fully resolved specs as a dict</span>
+</pre></div>
+</div>
+<p>Prance also includes a non-resolving parser that does not follow JSON
+references, in case you prefer that.</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">prance</span> <span class="k">import</span> <span class="n">BaseParser</span>
+<span class="n">parser</span> <span class="o">=</span> <span class="n">BaseParser</span><span class="p">(</span><span class="s1">&#39;path/to/my/swagger.yaml&#39;</span><span class="p">)</span>
+<span class="n">parser</span><span class="o">.</span><span class="n">specification</span>  <span class="c1"># contains specs as a dict still containing JSON references</span>
+</pre></div>
+</div>
+<p>On Windows, the code reacts correctly if you pass posix-like paths
+(<code class="docutils literal"><span class="pre">/c:/swagger</span></code>) or if the path is relative.  If you pass absolute
+windows path (like <code class="docutils literal"><span class="pre">c:\swagger.yaml</span></code>), you can use
+<cite>prance.util.fs.abspath</cite> to convert them.</p>
+<p>URLs can also be parsed:</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">parser</span> <span class="o">=</span> <span class="n">ResolvingParser</span><span class="p">(</span><span class="s1">&#39;http://petstore.swagger.io/v2/swagger.json&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Largely, that’s it. There is a whole slew of utility code that you may
+or may not find useful, too. Look at the <a class="reference external" href="https://jfinkhaeuser.github.io/prance/#api-modules">full documentation</a> for details.</p>
+</div>
+<div class="section" id="compatibility">
+<h2>Compatibility<a class="headerlink" href="#compatibility" title="Permalink to this headline">¶</a></h2>
+<p>As of version 0.8, we’re using <a class="reference external" href="https://github.com/pipermerriam/flex">flex</a> as the default validation backend.
+The previous <a class="reference external" href="https://github.com/Yelp/swagger_spec_validator">swagger-spec-validator</a> still works, if you
+installed with the <cite>ssv</cite> dependencies.</p>
+<p>You can select the backend in the constructor of the parser(s):</p>
+<div class="code python highlight-default"><div class="highlight"><pre><span></span><span class="n">parser</span> <span class="o">=</span> <span class="n">ResolvingParser</span><span class="p">(</span><span class="s1">&#39;http://petstore.swagger.io/v2/swagger.json&#39;</span><span class="p">,</span> <span class="n">backend</span> <span class="o">=</span> <span class="s1">&#39;swagger-spec-validator&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Note that the <cite>flex</cite> validator simply accepts integer status codes, despite them not being valid JSON.
+See <a class="reference external" href="https://github.com/jfinkhaeuser/prance/issues/5">issue #5</a> for details. Therefore, <cite>flex</cite> also
+does not support the <cite>strict</cite> option.</p>
+</div>
+</div>
+<div class="section" id="contributing">
+<h1>Contributing<a class="headerlink" href="#contributing" title="Permalink to this headline">¶</a></h1>
+<p>See <a class="reference external" href="https://github.com/jfinkhaeuser/prance/blob/master/CONTRIBUTING.md">CONTRIBUTING.md</a> for details.</p>
+</div>
+<div class="section" id="license">
+<h1>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h1>
+<p>Licensed under MITNFA (MIT +no-false-attribs) License. See the
+<a class="reference external" href="https://github.com/jfinkhaeuser/prance/blob/master/LICENSE.txt">LICENSE.txt</a> file for details.</p>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="api-modules">
+<h1>API/Modules<a class="headerlink" href="#api-modules" title="Permalink to this headline">¶</a></h1>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="api/prance.html#module-prance" title="prance"><code class="xref py py-obj docutils literal"><span class="pre">prance</span></code></a></td>
+<td>Prance implements parsers for Swagger/OpenAPI 2.0 API specs.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="api/prance.mixins.html#module-prance.mixins" title="prance.mixins"><code class="xref py py-obj docutils literal"><span class="pre">prance.mixins</span></code></a></td>
+<td>Defines Mixins for parsers.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="api/prance.util.formats.html#module-prance.util.formats" title="prance.util.formats"><code class="xref py py-obj docutils literal"><span class="pre">prance.util.formats</span></code></a></td>
+<td>This submodule contains file format related utility code for Prance.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="api/prance.util.fs.html#module-prance.util.fs" title="prance.util.fs"><code class="xref py py-obj docutils literal"><span class="pre">prance.util.fs</span></code></a></td>
+<td>This submodule contains file system utilities for Prance.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="api/prance.util.iterators.html#module-prance.util.iterators" title="prance.util.iterators"><code class="xref py py-obj docutils literal"><span class="pre">prance.util.iterators</span></code></a></td>
+<td>This submodule contains specialty iterators over specs.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="api/prance.util.resolver.html#module-prance.util.resolver" title="prance.util.resolver"><code class="xref py py-obj docutils literal"><span class="pre">prance.util.resolver</span></code></a></td>
+<td>This submodule contains a JSON reference resolver.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="api/prance.util.url.html#module-prance.util.url" title="prance.util.url"><code class="xref py py-obj docutils literal"><span class="pre">prance.util.url</span></code></a></td>
+<td>This submodule contains code for fetching/parsing URLs.</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2016-2017, Jens Finkhaeuser.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+    <a href="https://github.com/jfinkhaeuser/prance" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

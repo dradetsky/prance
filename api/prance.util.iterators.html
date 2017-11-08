@@ -1,0 +1,195 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>prance.util.iterators &#8212; prance 0.8.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="prance.util.resolver" href="prance.util.resolver.html" />
+    <link rel="prev" title="prance.util.fs" href="prance.util.fs.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">prance.util.iterators</a><ul>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="prance.util.fs.html" title="previous chapter">prance.util.fs</a></li>
+      <li>Next: <a href="prance.util.resolver.html" title="next chapter">prance.util.resolver</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="prance-util-iterators">
+<h1>prance.util.iterators<a class="headerlink" href="#prance-util-iterators" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<span class="target" id="module-prance.util.iterators"></span><p>This submodule contains specialty iterators over specs.</p>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="prance.util.iterators.item_iterator">
+<code class="descclassname">prance.util.iterators.</code><code class="descname">item_iterator</code><span class="sig-paren">(</span><em>value</em>, <em>path=()</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/prance/util/iterators.html#item_iterator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#prance.util.iterators.item_iterator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return item iterator over the a nested dict- or list-like object.</p>
+<p>Returns each item value as the second item to unpack, and a tuple path to the
+item as the first value - in that, it behaves much like viewitems(). For list
+like values, the path is made up of numeric indices.</p>
+<p>Given a spec such as this:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">spec</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">&#39;foo&#39;</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span>
+  <span class="s1">&#39;bar&#39;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="s1">&#39;some&#39;</span><span class="p">:</span> <span class="s1">&#39;dict&#39;</span><span class="p">,</span>
+  <span class="p">},</span>
+  <span class="s1">&#39;baz&#39;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span> <span class="mi">1</span><span class="p">:</span> <span class="mi">2</span> <span class="p">},</span>
+    <span class="p">{</span> <span class="mi">3</span><span class="p">:</span> <span class="mi">4</span> <span class="p">},</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Here, (parts of) the yielded values would be:</p>
+<blockquote>
+<div><table border="1" class="docutils">
+<colgroup>
+<col width="38%" />
+<col width="62%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">item</th>
+<th class="head">path</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>[…]</td>
+<td>(‘baz’,)</td>
+</tr>
+<tr class="row-odd"><td>{ 1: 2 }</td>
+<td>(‘baz’, 0)</td>
+</tr>
+<tr class="row-even"><td>2</td>
+<td>(‘baz’, 0, 1)</td>
+</tr>
+</tbody>
+</table>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>value</strong> (<em>dict/list</em>) – The specifications to iterate over.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">An iterator over all items in the value.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">iterator</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="prance.util.iterators.reference_iterator">
+<code class="descclassname">prance.util.iterators.</code><code class="descname">reference_iterator</code><span class="sig-paren">(</span><em>specs</em>, <em>path=()</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/prance/util/iterators.html#reference_iterator"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#prance.util.iterators.reference_iterator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterate through the given specs, returning only references.</p>
+<dl class="docutils">
+<dt>The iterator returns three values:</dt>
+<dd><ul class="first last simple">
+<li>The key, mimicking the behaviour of other iterators, although
+it will always equal ‘$ref’</li>
+<li>The value</li>
+<li>The path to the item. This is a tuple of all the item’s ancestors,
+in sequence, so that you can reasonably easily find the containing
+item. It does not include the final ‘$ref’ key.</li>
+</ul>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>specs</strong> (<em>dict</em>) – The specifications to iterate over.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">An iterator over all references in the specs.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">iterator</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2016-2017, Jens Finkhaeuser.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+    <a href="https://github.com/jfinkhaeuser/prance" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

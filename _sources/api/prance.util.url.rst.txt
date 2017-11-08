@@ -1,0 +1,46 @@
+prance.util.url
+===============
+
+.. toctree::
+
+.. automodule:: prance.util.url
+   :members:
+   :undoc-members:
+   :inherited-members:
+   :show-inheritance:
+
+
+
+
+Exceptions
+----------
+
+
+.. autoexception:: ResolutionError
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+
+
+
+
+
+
+
+
+
+
+Functions
+---------
+
+
+.. autofunction:: absurl
+
+.. autofunction:: fetch_url
+
+.. autofunction:: urlresource
+
+
+

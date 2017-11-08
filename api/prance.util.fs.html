@@ -1,0 +1,265 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>prance.util.fs &#8212; prance 0.8.0 documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.8.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="prance.util.iterators" href="prance.util.iterators.html" />
+    <link rel="prev" title="prance.util.formats" href="prance.util.formats.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="../index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">prance.util.fs</a><ul>
+<li><a class="reference internal" href="#functions">Functions</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="prance.util.formats.html" title="previous chapter">prance.util.formats</a></li>
+      <li>Next: <a href="prance.util.iterators.html" title="next chapter">prance.util.iterators</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="prance-util-fs">
+<h1>prance.util.fs<a class="headerlink" href="#prance-util-fs" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<span class="target" id="module-prance.util.fs"></span><p>This submodule contains file system utilities for Prance.</p>
+<div class="section" id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="prance.util.fs.abspath">
+<code class="descclassname">prance.util.fs.</code><code class="descname">abspath</code><span class="sig-paren">(</span><em>filename</em>, <em>relative_to=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/prance/util/fs.html#abspath"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#prance.util.fs.abspath" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the absolute path of a file relative to a reference file.</p>
+<p>If no reference file is given, this function works identical to
+<cite>canonical_filename</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> (<em>str</em>) – The filename to make absolute.</li>
+<li><strong>relative_to</strong> (<em>str</em>) – [optional] the reference file name.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The absolute path</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="prance.util.fs.canonical_filename">
+<code class="descclassname">prance.util.fs.</code><code class="descname">canonical_filename</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/prance/util/fs.html#canonical_filename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#prance.util.fs.canonical_filename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the canonical version of a file name.</p>
+<p>The canonical version is defined as the absolute path, and all file system
+links dereferenced.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>filename</strong> (<em>str</em>) – The filename to make canonical.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The canonical filename.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="prance.util.fs.detect_encoding">
+<code class="descclassname">prance.util.fs.</code><code class="descname">detect_encoding</code><span class="sig-paren">(</span><em>filename</em>, <em>default_to_utf8=True</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/prance/util/fs.html#detect_encoding"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#prance.util.fs.detect_encoding" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect the named file’s character encoding.</p>
+<p>If the first parts of the file appear to be ASCII, this function returns
+‘UTF-8’, as that’s a safe superset of ASCII. This can be switched off by
+changing the <cite>default_to_utf8</cite> parameter.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> (<em>str</em>) – The name of the file to detect the encoding of.</li>
+<li><strong>default_to_utf8</strong> (<em>bool</em>) – Defaults to True. Set to False to disable
+treating ASCII files as UTF-8.</li>
+<li><strong>read_all</strong> (<em>bool</em>) – Keyword argument; if True, reads the entire file
+for encoding detection.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The file encoding.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="prance.util.fs.from_posix">
+<code class="descclassname">prance.util.fs.</code><code class="descname">from_posix</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/prance/util/fs.html#from_posix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#prance.util.fs.from_posix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a path from posix-like, to the platform format.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<em>str</em>) – The filename in posix-like format.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The filename in the format of the platform.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="prance.util.fs.read_file">
+<code class="descclassname">prance.util.fs.</code><code class="descname">read_file</code><span class="sig-paren">(</span><em>filename</em>, <em>encoding=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/prance/util/fs.html#read_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#prance.util.fs.read_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read and decode a file, taking BOMs into account.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>filename</strong> (<em>str</em>) – The name of the file to read.</li>
+<li><strong>encoding</strong> (<em>str</em>) – The encoding to use. If not given, detect_encoding is
+used to determine the encoding.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">The file contents.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">unicode string</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="prance.util.fs.to_posix">
+<code class="descclassname">prance.util.fs.</code><code class="descname">to_posix</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/prance/util/fs.html#to_posix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#prance.util.fs.to_posix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert a path to posix-like format.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>fname</strong> (<em>str</em>) – The filename to convert to posix format.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The filename in posix-like format.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="prance.util.fs.write_file">
+<code class="descclassname">prance.util.fs.</code><code class="descname">write_file</code><span class="sig-paren">(</span><em>filename</em>, <em>contents</em>, <em>encoding=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/prance/util/fs.html#write_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#prance.util.fs.write_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a file with the given encoding.</p>
+<p>The default encoding is ‘utf-8’. It’s recommended not to change that for
+JSON or YAML output.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>filename</strong> (<em>str</em>) – The name of the file to read.</li>
+<li><strong>contents</strong> (<em>str</em>) – The file contents to write.</li>
+<li><strong>encoding</strong> (<em>str</em>) – The encoding to use. If not given, detect_encoding is
+used to determine the encoding.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2016-2017, Jens Finkhaeuser.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+    <a href="https://github.com/jfinkhaeuser/prance" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

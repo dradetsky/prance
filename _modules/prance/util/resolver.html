@@ -1,0 +1,248 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>prance.util.resolver &#8212; prance 0.8.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../../',
+        VERSION:     '0.8.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  <div class="document">
+    
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  <li><a href="../../prance.html">prance</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for prance.util.resolver</h1><div class="highlight"><pre>
+<span></span><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="sd">&quot;&quot;&quot;This submodule contains a JSON reference resolver.&quot;&quot;&quot;</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Jens Finkhaeuser&#39;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s1">&#39;Copyright (c) 2016-2017 Jens Finkhaeuser&#39;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s1">&#39;MIT +no-false-attribs&#39;</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">()</span>
+
+<span class="kn">import</span> <span class="nn">prance.util.url</span> <span class="k">as</span> <span class="nn">_url</span>
+
+
+<div class="viewcode-block" id="RefResolver"><a class="viewcode-back" href="../../../api/prance.util.resolver.html#prance.util.resolver.RefResolver">[docs]</a><span class="k">class</span> <span class="nc">RefResolver</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;Resolve JSON pointers/references in a spec.&quot;&quot;&quot;</span>
+
+  <span class="n">__RS_UNRESOLVED</span> <span class="o">=</span> <span class="mi">0</span>
+  <span class="n">__RS_PROCESSING</span> <span class="o">=</span> <span class="mi">1</span>
+  <span class="n">__RS_RESOLVED</span>   <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># noqa: E221</span>
+
+  <span class="n">__reference_cache</span> <span class="o">=</span> <span class="p">{}</span>
+
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">specs</span><span class="p">,</span> <span class="n">url</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Construct a JSON reference resolver.</span>
+
+<span class="sd">    The resolved specs are in the `specs` member after a call to</span>
+<span class="sd">    `resolve_references` has been made.</span>
+
+<span class="sd">    If a URL is given, it is used as a base for calculating the absolute</span>
+<span class="sd">    URL of relative file references.</span>
+
+<span class="sd">    :param dict specs: The parsed specs in which to resolve any references.</span>
+<span class="sd">    :param str url: [optional] The URL to base relative references on.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span> <span class="nn">copy</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">specs</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">specs</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
+
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">parsed_url</span> <span class="o">=</span> <span class="n">_url</span><span class="o">.</span><span class="n">absurl</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">_url_key</span> <span class="o">=</span> <span class="n">_url</span><span class="o">.</span><span class="n">urlresource</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parsed_url</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">parsed_url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_url_key</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">__resolution_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__RS_UNRESOLVED</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__recursion_protection</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+  <span class="k">def</span> <span class="nf">_dereferencing_iterator</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">partial</span><span class="p">,</span> <span class="n">parent_path</span> <span class="o">=</span> <span class="p">()):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Iterate over a partial spec, dereferencing all references within.</span>
+
+<span class="sd">    Yields the resolved path and value of all items that need substituting.</span>
+
+<span class="sd">    :param dict partial: The partial specs to work on.</span>
+<span class="sd">    :param tuple parent_path: The parent path of the partial specs.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span> <span class="nn">.iterators</span> <span class="k">import</span> <span class="n">reference_iterator</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">refstring</span><span class="p">,</span> <span class="n">item_path</span> <span class="ow">in</span> <span class="n">reference_iterator</span><span class="p">(</span><span class="n">partial</span><span class="p">):</span>
+      <span class="c1"># Resolve the reference we&#39;re currently dealing with.</span>
+      <span class="n">_</span><span class="p">,</span> <span class="n">ref_path</span><span class="p">,</span> <span class="n">referenced</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dereference</span><span class="p">(</span><span class="n">refstring</span><span class="p">)</span>
+      <span class="n">ref_path</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">ref_path</span><span class="p">)</span>
+
+      <span class="c1"># If the combination of parent path and ref path already exists,</span>
+      <span class="c1"># we&#39;re recursing and shouldn&#39;t call _dereferencing_iterator.</span>
+      <span class="n">recursion_key</span> <span class="o">=</span> <span class="p">(</span><span class="n">parent_path</span><span class="p">,</span> <span class="n">ref_path</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">recursion_key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__recursion_protection</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">_url</span><span class="o">.</span><span class="n">ResolutionError</span><span class="p">(</span><span class="s1">&#39;Recursion detected trying to resolve &quot;</span><span class="si">%s</span><span class="s1">&quot;!&#39;</span>
+            <span class="o">%</span> <span class="p">(</span><span class="n">refstring</span><span class="p">,</span> <span class="p">))</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">__recursion_protection</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">recursion_key</span><span class="p">)</span>
+
+      <span class="c1"># If the referenced object contains any reference, yield all the items</span>
+      <span class="c1"># in it that need dereferencing.</span>
+      <span class="k">for</span> <span class="n">inner</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dereferencing_iterator</span><span class="p">(</span><span class="n">referenced</span><span class="p">,</span> <span class="n">ref_path</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">inner</span>
+
+      <span class="c1"># We can remove ourselves from the recursion protection again after</span>
+      <span class="c1"># children are processed.</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">__recursion_protection</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">recursion_key</span><span class="p">)</span>
+
+      <span class="c1"># Afterwards also yield the outer item. This makes the</span>
+      <span class="c1"># _dereferencing_iterator work depth first.</span>
+      <span class="k">yield</span> <span class="n">parent_path</span> <span class="o">+</span> <span class="n">item_path</span><span class="p">,</span> <span class="n">referenced</span>
+
+<div class="viewcode-block" id="RefResolver.resolve_references"><a class="viewcode-back" href="../../../api/prance.util.resolver.html#prance.util.resolver.RefResolver.resolve_references">[docs]</a>  <span class="k">def</span> <span class="nf">resolve_references</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Resolve JSON pointers/references in the spec.&quot;&quot;&quot;</span>
+    <span class="c1"># If we&#39;re currently processing, exit to avoid recursion. If we&#39;re already</span>
+    <span class="c1"># done, also exit. Otherwise start processing.</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__resolution_status</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__RS_PROCESSING</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__RS_RESOLVED</span><span class="p">):</span>
+      <span class="k">return</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">__resolution_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__RS_PROCESSING</span>
+
+    <span class="kn">from</span> <span class="nn">dpath</span> <span class="k">import</span> <span class="n">util</span> <span class="k">as</span> <span class="n">dutil</span>
+    <span class="n">changes</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_dereferencing_iterator</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">specs</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">path</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">changes</span><span class="p">:</span>
+      <span class="c1"># Note that it&#39;s entirely possible for this set() to happen more than</span>
+      <span class="c1"># once per path/value pair. If a definition is used twice, and references</span>
+      <span class="c1"># another definition, then this second definition will be dereferenced</span>
+      <span class="c1"># with both of the uses of the first. But the value will be identical, so</span>
+      <span class="c1"># it makes no real changes.</span>
+      <span class="n">dutil</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">specs</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">__resolution_status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__RS_RESOLVED</span></div>
+
+  <span class="k">def</span> <span class="nf">_dereference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">urlstring</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Dereference the URL string.</span>
+
+<span class="sd">    Returns the parsed URL, the object path extraced from the URL, and the</span>
+<span class="sd">    dereferenced object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Parse URL</span>
+    <span class="n">parsed_url</span> <span class="o">=</span> <span class="n">_url</span><span class="o">.</span><span class="n">absurl</span><span class="p">(</span><span class="n">urlstring</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parsed_url</span><span class="p">)</span>
+
+    <span class="c1"># In order to start dereferencing anything in the referenced URL, we have</span>
+    <span class="c1"># to read and parse it, of course.</span>
+    <span class="n">parsed_url</span><span class="p">,</span> <span class="n">referenced</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fetch_url</span><span class="p">(</span><span class="n">parsed_url</span><span class="p">)</span>
+    <span class="n">obj_path</span> <span class="o">=</span> <span class="n">parsed_url</span><span class="o">.</span><span class="n">fragment</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">obj_path</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">obj_path</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+      <span class="n">obj_path</span> <span class="o">=</span> <span class="n">obj_path</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="c1"># In this inner parser&#39;s specification, we can now look for the referenced</span>
+    <span class="c1"># object.</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">referenced</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">obj_path</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="kn">from</span> <span class="nn">dpath</span> <span class="k">import</span> <span class="n">util</span> <span class="k">as</span> <span class="n">dutil</span>
+      <span class="k">try</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">dutil</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">referenced</span><span class="p">,</span> <span class="n">obj_path</span><span class="p">)</span>
+      <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">_url</span><span class="o">.</span><span class="n">ResolutionError</span><span class="p">(</span><span class="s1">&#39;Cannot resolve reference &quot;</span><span class="si">%s</span><span class="s1">&quot;!&#39;</span>
+            <span class="o">%</span> <span class="p">(</span><span class="n">urlstring</span><span class="p">,</span> <span class="p">))</span>
+    <span class="k">return</span> <span class="n">parsed_url</span><span class="p">,</span> <span class="n">obj_path</span><span class="p">,</span> <span class="n">value</span>
+
+  <span class="k">def</span> <span class="nf">_fetch_url</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fetch the parsed contents of the given URL.</span>
+
+<span class="sd">    Uses a caching mechanism so that each URL is only fetched once.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">url_key</span> <span class="o">=</span> <span class="n">_url</span><span class="o">.</span><span class="n">urlresource</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+    <span class="c1"># Same URL key means it&#39;s the current file</span>
+    <span class="k">if</span> <span class="n">url_key</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">_url_key</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">url</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">specs</span>
+
+    <span class="c1"># For all other URLs, we might have a cached parser around already.</span>
+    <span class="n">resolver</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__reference_cache</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url_key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="c1"># If we don&#39;t have a parser for the url yet, create and cache one.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">resolver</span><span class="p">:</span>
+      <span class="n">resolver</span> <span class="o">=</span> <span class="n">RefResolver</span><span class="p">(</span><span class="n">_url</span><span class="o">.</span><span class="n">fetch_url</span><span class="p">(</span><span class="n">url</span><span class="p">),</span> <span class="n">url</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">__reference_cache</span><span class="p">[</span><span class="n">url_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">resolver</span>
+
+    <span class="c1"># Resolve references *after* (potentially) adding the resolver to the</span>
+    <span class="c1"># cache. This together with the __recursion_protection allows us to detect</span>
+    <span class="c1"># and report recursions and bad references.</span>
+    <span class="n">resolver</span><span class="o">.</span><span class="n">resolve_references</span><span class="p">()</span>
+
+    <span class="c1"># That&#39;s it!</span>
+    <span class="k">return</span> <span class="n">url</span><span class="p">,</span> <span class="n">resolver</span><span class="o">.</span><span class="n">specs</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+    <div class="clearer"></div>
+  </div>
+    <div class="footer">
+      &copy;2016-2017, Jens Finkhaeuser.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+    <a href="https://github.com/jfinkhaeuser/prance" class="github">
+        <img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"  class="github"/>
+    </a>
+    
+
+    
+  </body>
+</html>

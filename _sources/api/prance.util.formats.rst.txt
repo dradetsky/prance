@@ -1,0 +1,44 @@
+prance.util.formats
+===================
+
+.. toctree::
+
+.. automodule:: prance.util.formats
+   :members:
+   :undoc-members:
+   :inherited-members:
+   :show-inheritance:
+
+
+
+
+Exceptions
+----------
+
+
+.. autoexception:: ParseError
+   :members:
+   :inherited-members:
+   :show-inheritance:
+
+
+
+
+
+
+
+
+
+
+
+
+Functions
+---------
+
+
+.. autofunction:: parse_spec
+
+.. autofunction:: serialize_spec
+
+
+
